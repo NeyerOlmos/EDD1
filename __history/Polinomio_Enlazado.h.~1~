@@ -1,0 +1,41 @@
+//---------------------------------------------------------------------------
+
+#ifndef Polinomio_EnlazadoH
+#define Polinomio_EnlazadoH
+
+
+#include "SMemoria.h"
+//---------------------------------------------------------------------------
+struct Nodo3{
+
+	 int dato;
+
+	 int coef;
+	 int exp;
+
+	 Nodo3 *sig;
+
+
+};
+
+typedef Nodo3 Direccion;
+
+class PolinomioEnlazado{
+  private:
+	  int nt;
+	   SMemoria M;
+	   Direccion PtrPoli;
+
+
+  public:
+
+	   void Crear();
+	   bool EsCero();
+	   int ExisteExp(int exp);
+	   void Poner(int Coeficiente,int Exponente);
+};
+
+
+
+
+#endif

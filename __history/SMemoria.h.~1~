@@ -1,0 +1,30 @@
+//---------------------------------------------------------------------------
+#include "vcl.h"
+#ifndef SMemoriaH
+#define SMemoriaH
+//---------------------------------------------------------------------------
+struct Nodo1{
+   int dato,link;
+};
+const max=15;
+class SMemoria{
+ private:// atributos
+	Nodo1 M[max+1];
+	int libre;
+ public:  // funciones y procedimientos
+  SMemoria();
+  int PedirEspacio(int nro);
+  void LiberarEspacio(int dir);
+  void PonerDato(int dir,int lugar, int dato);
+
+  int ObtenerDato(int dir, int lugar);
+
+  bool EsDirLibre(int dir);
+  int CantEspLibre();
+  int CantEspOcupado();
+  bool Estado(int dir);
+  void mostrar(int x, int y, TCanvas *t);
+  int MostrarLibre();
+  };
+  extern SMemoria *TDAMemoria;
+#endif

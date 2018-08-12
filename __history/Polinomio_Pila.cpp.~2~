@@ -1,0 +1,63 @@
+//---------------------------------------------------------------------------
+
+#pragma hdrstop
+
+#include "Polinomio_Pila.h"
+//---------------------------------------------------------------------------
+#pragma package(smart_init)
+
+
+
+
+void PolinomioPila::Crear(){
+  PilaCoef.Crear();
+  PilaExp.Crear();
+}
+
+bool PolinomioPila::Es_Cero(){
+  return PilaCoef.Vacia();
+}
+
+int PolinomioPila::Grado(){
+
+
+}
+
+
+
+int PolinomioPila::Num_De_Terminos(){
+
+
+
+ //int q=tope;
+	   int c=0;
+	  PilaVector Aux;
+	  Aux.Crear();
+
+	  while (!PilaCoef.Vacia())
+
+	  {
+	   int a=PilaCoef.Sacar();
+		   Aux.Meter(a);
+
+		   c=c+1;
+
+	   }
+
+
+	 while (!Aux.Vacia())
+	   {
+
+		  int a=Aux.Sacar();
+
+		   PilaCoef.Meter(a);
+
+	   }
+
+ return c;
+}
+
+
+
+
+

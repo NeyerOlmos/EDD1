@@ -1,0 +1,43 @@
+//---------------------------------------------------------------------------
+
+#ifndef Polinomio_ListaH
+#define Polinomio_ListaH
+//---------------------------------------------------------------------------
+#include "Lista_Vector.h"
+//---------------------------------------------------------------------------
+
+   class PolinomioLista{
+   private:
+	  ListaVector LC;
+	  ListaVector LE;
+
+   public:
+		 void Crear();
+		 bool Es_Cero();
+		 int Grado();
+		 int Num_De_Terminos();
+		 int Coeficiente(int Exponente);
+		 int Get_Exponente(int NumDeTermino);
+		 void Desplazar_Un_Elem_Hacia_La_Pos_Lug(int lug);
+		 void Poner_Termino(int Coeficiente, int Exponente);
+		 int ExisteExp(int exp);
+		 void Sumar(PolinomioLista A);
+		 void Sumar(PolinomioLista A,PolinomioLista B);
+		 void Restar(PolinomioLista A,PolinomioLista B);
+		 void Multiplicar_por_menos1();
+		 void Multiplicar(PolinomioLista A,PolinomioLista B);
+		 void Derivar();
+		 int Potencia(int Numero,int Potencia);
+		 int Calcular_Y(int X);
+		 void MostrarPolinomioEnStringGrid(TStringGrid *texponentes,TStringGrid *tcoeficientes);
+		 void GraficarEnCanvas(TCanvas *t);
+		 void MostrarPolinomioEnLabel(TLabel *l);
+
+
+   };
+
+
+
+
+
+#endif

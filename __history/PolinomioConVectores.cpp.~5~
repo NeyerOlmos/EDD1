@@ -1,0 +1,186 @@
+//---------------------------------------------------------------------------
+
+#pragma hdrstop
+
+#include "PolinomioConVectores.h"
+#include <string.h>
+#include <string>
+//---------------------------------------------------------------------------
+#pragma package(smart_init)
+
+void Polinomio::Crear(){
+ nt=0;
+
+   }
+bool Polinomio::Es_Cero(){
+
+return nt==0;
+  }
+
+int Polinomio::Grado(){
+   if (nt>0) {
+	   int max=VE[1];
+	   int i;
+	   for (i = 0; i < nt; i++) {
+			   if (VE[i]>max) {
+				   max=VE[i];
+			   }
+	   }
+	   return max;
+   }else{
+   throw new Exception("Error: no hay terminos");
+   }
+
+
+ }
+
+ int Polinomio::Num_De_Terminos(){
+ return nt;
+ }
+
+int Polinomio::Coeficiente(int Exponente){
+   if (Exponente>=0 && Exponente<=Grado()) {
+		int i;
+		 for (i = 0;i<nt; i++) {
+			  if (VE[i]==Exponente) {
+				 return VC[i];
+			  }
+		 }
+   }else{
+	throw new Exception("Error: no existe coeficiente con ese exponente");
+
+  }
+
+ }
+
+   int Polinomio::Get_Exponente(int NumDeTermino){
+
+	int x = VE[NumDeTermino-1];
+	return x;
+
+   }
+
+void Polinomio::Poner_Termino(int Coeficiente,int Exponente){
+	 int lug=nt;
+	   if (Coeficiente!=0) {
+
+
+	 if (nt==0) {
+		 nt=nt+1;
+		 VC[lug]=Coeficiente;
+		 VE[lug]=Exponente;
+	 } else{
+	 int i=0;
+		bool Swich=false;
+			while (i<nt){
+			  if (VE[i]==Exponente) {
+				  VC[i]=VC[i]+Coeficiente;
+				   Swich=true;
+			  }
+			  i++;
+
+			}
+			if (!Swich) {
+			  nt=nt+1;
+			  VE[lug]=Exponente;
+			  VC[lug]=Coeficiente;
+
+			}
+	 }
+  }
+ }
+
+
+  void Polinomio::Sumar(Polinomio A){
+  int i;
+  for (i = 1; i <= A.nt; i++) {
+   int exp=A.Get_Exponente(i);
+   int coef=A.Coeficiente(exp);
+
+	Poner_Termino(coef*exp,exp-1);
+
+  }
+ }
+
+ void Polinomio::Sumar(Polinomio A,Polinomio B){
+ int i;
+   for (i = 1; i <= A.nt; i++) {
+	 int exp=A.Get_Exponente(i);
+   int coef=A.Coeficiente(exp);
+	Poner_Termino(coef,exp);
+
+   }
+
+
+   for (i = 1; i <= B.nt; i++) {
+	 int exp=B.Get_Exponente(i);
+   int coef=B.Coeficiente(exp);
+	Poner_Termino(coef,exp);
+
+   }
+
+ }
+ void Polinomio::Multiplicar_por_menos1(){
+   int i;
+   for (i = 0; i < nt; i++) {
+	  VC[i]=VC[i]*(-1);
+   }
+
+ }
+
+ void Polinomio::Restar(Polinomio A,Polinomio B){
+	  B.Multiplicar_por_menos1() ;
+	  Sumar(A,B);
+
+ }
+ void Polinomio::Multiplicar(Polinomio A,Polinomio B){
+  //hacer :V
+  int i;
+  for (i = 0; i < A.Num_De_Terminos(); i++) {
+	  int j;
+	  for (j = 0; j < B.Num_De_Terminos(); j++) {
+			  int coef=A.VC[i]*B.VC[j];
+			  int exp=A.VE[i]+B.VE[j];
+			  Poner_Termino(coef,exp);
+	  }
+  }
+
+ }
+ void Polinomio::Derivar(){
+	 int i;
+	 for (i = 0; i < nt; i++) {
+		int exp=Get_Exponente(i+1);
+		int coef=Coeficiente(exp);
+		   if (exp!=0) {
+
+
+		   VC[i]=	coef*exp ;
+		   VE[i]=exp-1;
+		   }else{
+
+		   VC[i]=	coef*exp ;
+			}
+
+
+	 }
+
+
+ }
+
+ void Polinomio::MostrarPolinomioEnStringGrid(TStringGrid *te,TStringGrid *tc){
+   int i;
+   te->ColCount=nt;
+   tc->ColCount=nt;
+   te->Width=nt*40;
+   tc->Width=nt*40;
+	 for (i = 0; i < nt; i++) {
+
+		te->Cells[i][0]=VE[i];
+		//tc->Cells[i][0]=VC[i];
+
+		tc->Cells[i][0]=IntToStr(VC[i])+"x";
+
+	 }
+
+
+ }

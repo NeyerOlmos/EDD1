@@ -1,0 +1,33 @@
+//---------------------------------------------------------------------------
+
+#ifndef Cola_ListaH
+#define Cola_ListaH
+
+#include "Lista_Vector.h"
+//---------------------------------------------------------------------------
+
+
+class ColaLista{
+
+private:
+	 ListaVector L;
+
+
+public:
+
+void Crear();
+bool Vacia();
+void Poner(int Elemento);
+int Sacar();
+int Primero();
+
+void Mostrar(TStringGrid *t);
+
+
+
+
+};
+
+
+
+#endif

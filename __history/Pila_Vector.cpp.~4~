@@ -1,0 +1,72 @@
+//---------------------------------------------------------------------------
+
+#pragma hdrstop
+
+#include "Pila_Vector.h"
+//---------------------------------------------------------------------------
+#pragma package(smart_init)
+
+void PilaVector::Crear(){
+   tope=0;
+}
+
+bool PilaVector::Vacia(){
+  return tope==0;
+}
+
+void PilaVector::Meter(int Numero){
+  if (tope<MaxPila) {
+	   tope=tope+1;
+	  Elemento[tope]=Numero;
+  }
+
+
+}
+
+
+int PilaVector::Sacar(){
+	int e;
+	 if (!Vacia()) {
+		 e=Elemento[tope];
+		 tope=tope-1;
+	 }else{
+
+	 throw new Exception("Error: Pila Vacia");
+	 }
+
+  return e;
+}
+
+int PilaVector::Cima(){
+	if (!Vacia()) {
+		  return Elemento[tope];
+	}else{
+	 throw new Exception("Error: Pila Vacia");
+	}
+
+
+}
+
+void PilaVector::Mostrar(TStringGrid *t){
+	  int i;
+	  t->RowCount=tope;
+	  t->Height=tope*24;
+	  int q=tope;
+
+	  PilaVector Aux;
+	  Aux.Crear();
+	   for (i = 0; i < q ; i++) {
+		   int a=Sacar();
+		   Aux.Meter(a);
+		 //  Aux.Elemento[i]=a;
+		   t->Cells[0][i]=a;
+
+	   }
+
+	   for (i = 0; i < q ; i++) {
+		  int a=Aux.Sacar();
+		 //  Elemento[i]=a;
+		   Meter(a);
+
+	   }
+}

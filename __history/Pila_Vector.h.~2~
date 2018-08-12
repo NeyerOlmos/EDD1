@@ -1,0 +1,35 @@
+//---------------------------------------------------------------------------
+
+#ifndef Pila_VectorH
+#define Pila_VectorH
+
+//------------------------------------
+//#include <Vcl.StdCtrls.hpp>
+#include <Vcl.Grids.hpp>
+//#include <except.h>
+//#include <Vcl.Controls.hpp>
+//---------------------------------------------------------------------------
+
+
+const int MaxP=100;
+
+class PilaVector{
+private:
+  int Elemento[MaxP];
+  int tope;
+public:
+
+	  void Crear();
+	  bool Vacia();
+	  void Meter(int Numero);
+	  int Sacar();
+	  int Cima();
+	  void Mostrar(TStringGrid *t);
+
+
+};
+
+
+
+
+#endif

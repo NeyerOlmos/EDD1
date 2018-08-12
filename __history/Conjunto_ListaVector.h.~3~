@@ -1,0 +1,41 @@
+//---------------------------------------------------------------------------
+
+#ifndef Conjunto_ListaVectorH
+#define Conjunto_ListaVectorH
+#include "Lista_Vector.h"
+//---------------------------------------------------------------------------
+
+class Conjunto{
+ private:
+	  Lista elem;
+
+ public:
+	void Crear();
+	bool Vacia();
+	int Cardinal();
+	void inserta(int elemento);
+	void suprime(int elemento);
+	bool pertenece(int elemento);
+	int muestrea();
+	void Union(Conjunto A,Conjunto B);
+	void Interserccion(Conjunto A,Conjunto B);
+	void No_Interseccion(Conjunto A,Conjunto B);
+	void mostrar(TStringGrid *t);
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#endif

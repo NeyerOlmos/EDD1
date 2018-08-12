@@ -1,0 +1,39 @@
+//---------------------------------------------------------------------------
+
+#pragma hdrstop
+
+#include "Pila_ListaVector.h"
+//---------------------------------------------------------------------------
+#pragma package(smart_init)
+
+
+	void PilaLista::Crear(){
+
+	 L.crear();
+
+	 }
+	void PilaLista::Meter(int Elemento){
+	 L.inserta(1,Elemento);
+		 }
+
+
+	int PilaLista::Sacar(){
+	  int x=L.recupera(1);
+	   L.suprime(1);
+	   return x;
+	}
+
+	bool PilaLista::Vacia(){
+
+		  return L.vacia();
+	}
+	int PilaLista::Cima(){
+
+		return L.recupera(1);
+	}
+
+	void PilaLista::MostrarPilaLista(TStringGrid *t){
+
+    L.mostrarListaEnStringGrid(t);
+	}
+

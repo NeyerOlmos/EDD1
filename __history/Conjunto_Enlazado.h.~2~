@@ -1,0 +1,32 @@
+//---------------------------------------------------------------------------
+
+#ifndef Conjunto_EnlazadoH
+#define Conjunto_EnlazadoH
+
+#include "SMemoria.h"
+//---------------------------------------------------------------------------
+struct Nodo2{
+	int dato;
+	//Nodo2 *Sig;
+};
+typedef Nodo2 Direccion3;
+class ConjuntoEnlazado{
+
+	private:
+	SMemoria M;
+		int Cant;
+		Direccion3 PtrConj;
+	public:
+	   void	Crear();
+		int Cardinal();
+		bool Vacio();
+		int Ordinal(int e);
+		void Inserta(int e);
+		void Suprime(int e);
+		bool Pertenece(int e);
+		int Muestrea();
+
+		void Mostrar(int x, int y, TCanvas *t);
+};
+//extern ConjuntoM *CM;
+#endif

@@ -1,0 +1,35 @@
+//---------------------------------------------------------------------------
+#include <vcl.h>
+#ifndef Polinomio_EnlazadoH
+#define Polinomio_EnlazadoH
+//---------------------------------------------------------------------------
+
+struct Nodo4{
+	 int Coef,Exp,Sig;
+};
+typedef Nodo4 Direccion4;
+
+class PolinomioM{
+	private:
+		int Nt;
+		Direccion4 PtrPoli;
+	public:
+		PolinomioM();
+		bool EsCero();
+		void PonerTermino(int co, int exp);
+		int Coeficiente(int exp); //devuelve el coeficiente del termino con exponente exp
+		int Exponente(int NroTer); //retorna el expo. del nro de termino
+		int Grado();
+		void Suma(PolinomioM PM1, PolinomioM PM2);
+		void Resta(PolinomioM PM1, PolinomioM PM2);
+		void Multiplicacion(PolinomioM PM1, PolinomioM PM2);
+		int NroTerminos();
+
+		String MostrarPoli(int a);
+		int ExisteExp(int exp);
+		int PosCoef(int exp);
+
+
+};
+extern PolinomioM *PM;
+#endif

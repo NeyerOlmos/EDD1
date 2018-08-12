@@ -1,0 +1,29 @@
+//---------------------------------------------------------------------------
+
+#ifndef Pila_ListaH
+#define Pila_ListaH
+//---------------------------------------------------------------------------
+#include "Lista_Vector.h"
+
+//-------------------------------
+
+class PilaLista{
+
+private :
+	ListaVector<int> L;
+
+
+public:
+	  void Crear();
+	  bool Vacia();
+	  void Meter(int Elemento);
+	  int Sacar();
+	  int Cima();
+	  void MostrarPilaLista(TStringGrid *t);
+	  void Mostrar(int x , int y, TCanvas *t);
+
+};
+
+
+
+#endif

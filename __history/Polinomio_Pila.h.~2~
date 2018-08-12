@@ -1,0 +1,40 @@
+//---------------------------------------------------------------------------
+
+#ifndef Polinomio_PilaH
+#define Polinomio_PilaH
+//---------------------------------------------------------------------------
+#include "Pila_Vector.h"
+//-------------------------------------------------
+
+
+class PolinomioPila{
+	  private:
+
+		 PilaVector PilaCoef;
+		 PilaVector PilaExp;
+
+
+
+	  public:
+	   void Crear();
+		 bool Es_Cero();
+		 int Grado();
+		 int Num_De_Terminos();
+		 int Coeficiente(int Exponente);
+		 int Get_Exponente(int NumDeTermino);
+		 void Desplazar_Un_Elem_Hacia_La_Pos_Lug(int lug);
+		 int ExisteExp(int exp);
+		 void Poner_Termino(int Coeficiente, int Exponente);
+
+
+
+};
+
+
+
+
+
+
+
+
+#endif

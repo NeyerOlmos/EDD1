@@ -1,0 +1,41 @@
+//---------------------------------------------------------------------------
+
+#ifndef Lista_VectorH
+#define Lista_VectorH
+
+
+#include <Vcl.StdCtrls.hpp>
+#include <Vcl.Grids.hpp>
+#include <except.h>
+#include <Vcl.Controls.hpp>
+//---------------------------------------------------------------------------
+const  MaxL=100;
+
+
+ class ListaVector{
+
+   private: //atributos.
+
+  /* struct Enteros{
+   }V[50];*/
+
+   int Elemento[MaxL];
+   int longitudL;
+
+   public:  //metodos funciones y procedimientos.
+	   void crear();
+	   int fin();
+	   int primero();
+	   int siguiente(int direccion);
+	   int anterior(int direccion);
+	   bool vacia();
+	   int recupera(int direccion);
+	   int recupera_dir(int elemento);
+	   int longitud();
+	   void inserta(int direccion,int elemento);
+	   void suprime(int direccion);
+	   void modifica(int direccion,int elemento);
+
+	   void mostrarListaEnStringGrid(TStringGrid *t);
+ };
+#endif

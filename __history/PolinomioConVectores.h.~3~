@@ -1,0 +1,44 @@
+//---------------------------------------------------------------------------
+
+#ifndef PolinomioConVectoresH
+#define PolinomioConVectoresH
+#include <except.h>
+#include <vcl.h>
+#include <Vcl.Grids.hpp>
+
+//---------------------------------------------------------------------------
+const int Max=15;
+class Polinomio{
+	 private:
+		   int VE[Max];
+		   int VC[Max];
+		   int nt;
+
+	 public:
+		 void Crear();
+		 bool Es_Cero();
+		 int Grado();
+		 int Num_De_Terminos();
+		 int Coeficiente(int Exponente);
+		 int Get_Exponente(int NumDeTermino);
+		 void Poner_Termino(int Coeficiente, int Exponente);
+		 void Sumar(Polinomio A);
+		 void Sumar(Polinomio A,Polinomio B);
+		 void Restar(Polinomio A,Polinomio B);
+		 void Multiplicar_por_menos1();
+		 void Multiplicar(Polinomio A,Polinomio B);
+		 void Derivar();
+		 void MostrarPolinomioEnStringGrid(TStringGrid *texponentes,TStringGrid *tcoeficientes);
+
+};
+
+
+
+
+
+
+
+
+
+
+#endif

@@ -1,0 +1,212 @@
+//---------------------------------------------------------------------------
+
+#pragma hdrstop
+
+#include "ClaseListaContinua.h"
+//---------------------------------------------------------------------------
+#pragma package(smart_init)
+
+void Lista::crear(){
+	  longitudL=0;
+	  }
+
+
+	int Lista::fin(){
+	if (vacia()) {
+	throw new Exception("Lista Vacia");
+
+		}else {
+
+		 return longitudL;
+
+		 }
+
+	}
+
+
+	int Lista::primero(){
+	 if (!vacia()) {
+		 return 1;
+	 }else {
+		throw new Exception("Lista Vacia");
+	 }
+
+	}
+
+
+	int Lista::siguiente(int direccion){
+		 if (vacia()) {
+			 throw new Exception("Lista Vacia");
+		 }else {
+			 if (direccion==longitudL) {
+				  throw new Exception("Error: no hay una direccion siguiente a la que envio");
+
+			 }else{
+
+				  return direccion+1;
+				}
+
+			}
+
+	}
+
+
+	int Lista::anterior(int direccion){
+		if (vacia()) {
+			 throw new Exception("Lista Vacia");
+		 }else {
+			 if (direccion==1) {
+				  throw new Exception("Error: no hay una direccion anterior a la que envio");
+
+			 }else{
+
+				  return direccion-1;
+				}
+
+			}
+
+
+	}
+
+
+	bool Lista::vacia(){
+		return longitudL==0;
+	}
+
+
+	int Lista::recupera(int direccion){
+	   if (vacia()) {
+			throw new Exception("Lista Vacia");
+	   }else{
+			if (!((direccion>=1)&&(direccion<=longitudL))) {
+			 throw new Exception("Error de direccion");
+
+			}else{
+				return Elemento[direccion] ;
+
+			   }
+
+		   }
+	}
+
+
+
+	int Lista::longitud(){
+	return longitudL;
+
+	}
+
+
+
+	void Lista::inserta(int direccion,int elemento){
+
+		if (!vacia()) {
+
+
+
+
+	   if (longitudL==MaxL) {
+		   throw new Exception("Lista LLena");
+	   }else if (!((direccion>=1)&&(direccion<=longitudL))) {
+		   throw new Exception("Error de Direccion");
+	   }
+		 }
+
+	   longitudL=longitudL+1;
+	   int i=longitudL;
+	   while (i>direccion){
+	   Elemento[i]=Elemento[i-1];
+	   i=i-1;
+	   }
+	   Elemento[direccion]=elemento;
+
+
+
+   /*
+		int i;
+		for (i = longitudL+1; i < direccion+1; i++) {
+			 Elemento[i]=Elemento[i-1];
+		}
+		Elemento[direccion]=elemento;
+		longitudL=longitudL+1;
+	 */
+
+
+	}
+
+
+
+
+	void Lista::suprime(int direccion){
+	   if (longitudL==0) {
+		   throw new Exception("Lista Vacia");
+	   }
+		if (!((direccion>=1)&&(direccion<=longitudL))) {
+		   throw new Exception("Error de Direccion");
+	   }
+
+
+
+	   int i=direccion;
+		while (i<=longitudL){
+		 Elemento[i]=Elemento[i+1];
+		 i=i+1;
+		}
+		longitudL=longitudL-1;
+
+
+	   /*	int i;
+
+	   for (i = direccion; i < longitudL-1; i++) {
+		   Elemento[i]=Elemento[i+1];
+
+	   }
+	   longitudL=longitudL-1; */
+	}
+
+	void Lista::modifica(int direccion,int elemento){
+	   if (longitudL==0) {
+		   throw new Exception("Lista Vacia");
+	   }
+
+	   if (!((direccion>=1)&&(direccion<=longitudL))) {
+		   throw new Exception("Error de Direccion");
+		}
+
+		Elemento[direccion]=elemento;
+	}
+
+
+
+
+
+	int Lista::recupera_dir(int elemento){
+
+	   int i=0;
+	bool r=false;
+	while (i<longitud()&& r==false){
+
+	  int q=recupera(i+1);
+
+	   if (q==elemento) {
+		 r=true;
+	   }
+	   i++;
+
+      }
+
+
+	 return i;
+
+
+	}
+
+	void Lista::mostrarListaEnStringGrid(TStringGrid *t){
+	 t->ColCount=longitudL;
+	 t->Width=longitudL*40;
+	 int i;
+	 for (i = 0; i < longitudL; i++) {
+		 t->Cells[i][0]=Elemento[i+1];
+	 }
+
+	}

@@ -1,0 +1,449 @@
+//---------------------------------------------------------------------------
+//#include <vcl.h>
+#ifndef Polinomio_EnlazadoH
+#define Polinomio_EnlazadoH
+#include "vcl.h"
+#include "SMemoria.h"
+//---------------------------------------------------------------------------
+
+struct Nodo4{
+	 int Coef,Exp,Sig;
+};
+typedef Nodo4 Direccion4;
+
+template <class T>
+class PolinomioEnlazado{
+	private:
+		int Nt;
+		Direccion4 PtrPoli;
+		 SMemoria<T> M;
+	public:
+	 /*  void   Crear();
+		bool EsCero();
+		void PonerTermino(int co, int exp);
+		int Coeficiente(int exp); //devuelve el coeficiente del termino con exponente exp
+		int Exponente(int NroTer); //retorna el expo. del nro de termino
+		int Grado();
+		void Suma(PolinomioEnlazado PM1, PolinomioEnlazado PM2);
+		void Resta(PolinomioEnlazado PM1, PolinomioEnlazado PM2);
+		void Multiplicacion(PolinomioEnlazado PM1, PolinomioEnlazado PM2);
+		int NroTerminos();
+
+		String MostrarPoli(int a);
+		int ExisteExp(int exp);
+		int PosCoef(int exp);
+
+		void Mostrar(TCanvas *t);*/
+
+
+
+		PolinomioEnlazado()
+{  // M.Crear();
+	PtrPoli.Coef  = -1;
+	Nt=0;
+}
+
+bool EsCero()
+{
+	return (Nt==0);
+}
+
+int ExisteExp(int exp)
+{   int valor,a,copiaC = PtrPoli.Coef, copiaEx=PtrPoli.Exp, copiaSig = PtrPoli.Sig  ;
+	while ((PtrPoli.Coef) !=-1){
+		valor = M.ObtenerDato(PtrPoli.Exp ,1);
+			if (valor == exp) {
+				a = PtrPoli.Coef;
+				PtrPoli.Coef = copiaC;
+				PtrPoli.Exp = copiaEx;
+				PtrPoli.Sig = copiaSig;
+				return a;
+			}else{
+				PtrPoli.Coef  = M.ObtenerDato(PtrPoli.Sig ,1);
+				if (PtrPoli.Coef !=-1) {
+					PtrPoli.Exp = M.ObtenerLink(PtrPoli.Coef);
+					PtrPoli.Sig = M.ObtenerLink(PtrPoli.Exp);
+
+				}
+			}
+		}
+		a = PtrPoli.Coef;
+		PtrPoli.Coef = copiaC;
+		PtrPoli.Exp = copiaEx;
+		PtrPoli.Sig = copiaSig;
+		return a;
+}
+
+void PonerTermino(T co, T exp)
+{   int dir = ExisteExp(exp),ant,a;
+	int copCo = PtrPoli.Coef;
+	if (dir==-1) {
+		int aux = M.PedirEspacio(3);
+		if (aux!=-1) {
+
+			M.PonerDato(aux,1,co);
+			M.PonerDato(aux,2,exp);
+			M.PonerDato(aux,3,PtrPoli.Coef);
+			PtrPoli.Coef = aux;
+			PtrPoli.Exp = M.ObtenerLink(aux);
+			ant = PtrPoli.Sig;
+			PtrPoli.Sig = M.ObtenerLink(PtrPoli.Exp);
+			Nt=Nt+1;
+		}
+	}else{
+		M.PonerDato(dir,1,M.ObtenerDato(dir,1)+co);
+			if (M.ObtenerDato(dir,1)==0 ) {
+				if (dir == PtrPoli.Coef) {
+					PtrPoli.Coef = M.ObtenerDato(PtrPoli.Sig,1);
+					if (PtrPoli.Coef !=-1) {
+					  PtrPoli.Exp = M.ObtenerLink(PtrPoli.Coef);
+					  PtrPoli.Sig = M.ObtenerLink(PtrPoli.Exp);
+					}else{
+					  PtrPoli.Exp = 0;
+					  PtrPoli.Sig = 0;
+					}
+					M.LiberarEspacio(dir);
+					Nt=Nt-1;
+				}else{
+					while (PtrPoli.Coef!=dir){
+					ant = PtrPoli.Coef;
+					PtrPoli.Coef = M.ObtenerDato(PtrPoli.Coef,3) ;
+
+					}
+					a=M.ObtenerDato(PtrPoli.Coef,3);
+					M.PonerDato(ant,3,a);
+					PtrPoli.Coef = copCo;
+					M.LiberarEspacio(dir);
+					Nt=Nt-1;
+				}
+			}
+
+	}
+}
+
+int Coeficiente(int exp)
+{
+	int valor,a,copiaC = PtrPoli.Coef, copiaEx=PtrPoli.Exp, copiaSig = PtrPoli.Sig;
+	if (!EsCero()) {
+		while (PtrPoli.Coef != -1){
+			valor = M.ObtenerDato(PtrPoli.Exp,1);
+				if (valor == exp) {
+					a = M.ObtenerDato(PtrPoli.Coef,1);
+					PtrPoli.Coef = copiaC;
+					PtrPoli.Exp = copiaEx;
+					PtrPoli.Sig = copiaSig;
+					return a;
+				}else{
+					PtrPoli.Coef  = M.ObtenerDato(PtrPoli.Sig,1);
+					if (PtrPoli.Coef!=-1) {
+					 PtrPoli.Exp = M.ObtenerLink(PtrPoli.Coef);
+					 PtrPoli.Sig = M.ObtenerLink(PtrPoli.Exp);
+					}
+			}
+		}
+		 PtrPoli.Coef = copiaC;
+		 PtrPoli.Exp = copiaEx;
+		 PtrPoli.Sig = copiaSig;
+		throw new Exception("ERROR NO EXISTE COEF. CON ESE EXPONENTE");
+
+	}else{
+		throw new Exception ("ERROR POLINOMIO VACIO!");
+	}
+
+}
+
+//retorna el exponente del numero de termino introducido
+int Exponente(int NroTer)
+{
+	int i, cont,a,copiaC = PtrPoli.Coef, copiaEx=PtrPoli.Exp, copiaSig = PtrPoli.Sig;
+	if (!EsCero()) {
+		if (NroTer<=Nt) {
+			for (i = Nt; i > 0; i--) {
+				if (i==NroTer) {
+					a = M.ObtenerDato(PtrPoli.Exp,1);
+					PtrPoli.Coef = copiaC;
+					PtrPoli.Exp = copiaEx;
+					PtrPoli.Sig = copiaSig;
+					return a;
+				}else{
+					PtrPoli.Coef  = M.ObtenerDato(PtrPoli.Sig,1);
+					if (PtrPoli.Coef!=-1) {
+						PtrPoli.Exp = M.ObtenerLink(PtrPoli.Coef);
+						PtrPoli.Sig = M.ObtenerLink(PtrPoli.Exp);
+					}
+				}
+			}
+		}else{
+			throw new Exception ("ERROR DE TÉRMINO");
+		}
+	}else{
+		throw new Exception ("ERROR POLINOMIO VACIO!");
+	}
+}
+
+int Grado()
+{   int sig,copiaC = PtrPoli.Coef, copiaEx=PtrPoli.Exp, copiaSig = PtrPoli.Sig;
+	if (!EsCero()) {
+		int mayor = M.ObtenerDato(PtrPoli.Exp,1);
+			PtrPoli.Coef  = M.ObtenerDato(PtrPoli.Sig,1);
+			PtrPoli.Exp = M.ObtenerLink(PtrPoli.Coef);
+			PtrPoli.Sig = M.ObtenerLink(PtrPoli.Exp);
+		while (PtrPoli.Coef !=-1){
+			sig = M.ObtenerDato(PtrPoli.Exp,1);
+				if (sig>mayor) {
+					mayor = sig;
+				}else{
+					PtrPoli.Coef  = M.ObtenerDato(PtrPoli.Sig,1);
+					if (PtrPoli.Coef !=-1) {
+						PtrPoli.Exp = M.ObtenerLink(PtrPoli.Coef);
+						PtrPoli.Sig = M.ObtenerLink(PtrPoli.Exp);
+					}
+				}
+		}
+		 PtrPoli.Coef = copiaC;
+		 PtrPoli.Exp = copiaEx;
+		 PtrPoli.Sig = copiaSig;
+		return mayor;
+
+	}else{
+		throw new Exception ("ERROR POLINOMIO VACIO!");
+	}
+
+}
+
+void Suma(PolinomioEnlazado A, PolinomioEnlazado B)
+{
+	int co,exp;
+	int copCoA = A.PtrPoli.Coef,copExA = A.PtrPoli.Exp, copSiA = A.PtrPoli.Sig;
+	int copCoB = B.PtrPoli.Coef,copExB = B.PtrPoli.Exp, copSiB = B.PtrPoli.Sig;
+	while (A.PtrPoli.Coef  !=-1){
+		co = M.ObtenerDato(A.PtrPoli.Coef,1);
+		exp = M.ObtenerDato(A.PtrPoli.Exp,1);
+		PonerTermino(co,exp);
+		A.PtrPoli.Coef  = M.ObtenerDato(A.PtrPoli.Sig,1);
+			if (A.PtrPoli.Coef  !=-1) {
+				A.PtrPoli.Exp = M.ObtenerLink(A.PtrPoli.Coef);
+				A.PtrPoli.Sig = M.ObtenerLink(A.PtrPoli.Exp);
+		}
+	}
+	A.PtrPoli.Coef = copCoA;
+	A.PtrPoli.Exp =  copExA;
+	A.PtrPoli.Sig =  copSiA;
+	while (B.PtrPoli.Coef  !=-1){
+		co = M.ObtenerDato(B.PtrPoli.Coef,1);
+		exp = M.ObtenerDato(B.PtrPoli.Exp,1);
+		PonerTermino(co,exp);
+		B.PtrPoli.Coef  = M.ObtenerDato(B.PtrPoli.Sig,1);
+			if (B.PtrPoli.Coef  !=-1) {
+				B.PtrPoli.Exp = M.ObtenerLink(B.PtrPoli.Coef);
+				B.PtrPoli.Sig = M.ObtenerLink(B.PtrPoli.Exp);
+		}
+	}
+	B.PtrPoli.Coef = copCoB;
+	B.PtrPoli.Exp =  copExB;
+	B.PtrPoli.Sig =  copSiB;
+}
+
+void Resta(PolinomioEnlazado A, PolinomioEnlazado B)
+{
+	int co,exp;
+	int copCoA = A.PtrPoli.Coef,copExA = A.PtrPoli.Exp, copSiA = A.PtrPoli.Sig;
+	int copCoB = B.PtrPoli.Coef,copExB = B.PtrPoli.Exp, copSiB = B.PtrPoli.Sig;
+	while (A.PtrPoli.Coef  !=-1){
+		co = M.ObtenerDato(A.PtrPoli.Coef,1);
+		exp = M.ObtenerDato(A.PtrPoli.Exp,1);
+		PonerTermino(co,exp);
+		A.PtrPoli.Coef  = M.ObtenerDato(A.PtrPoli.Sig,1);
+			if (A.PtrPoli.Coef  !=-1) {
+				A.PtrPoli.Exp = M.ObtenerLink(A.PtrPoli.Coef);
+				A.PtrPoli.Sig = M.ObtenerLink(A.PtrPoli.Exp);
+		}
+	}
+	A.PtrPoli.Coef = copCoA;
+	A.PtrPoli.Exp =  copExA;
+	A.PtrPoli.Sig =  copSiA;
+	while (B.PtrPoli.Coef  !=-1){
+		co = M.ObtenerDato(B.PtrPoli.Coef,1);
+		exp = M.ObtenerDato(B.PtrPoli.Exp,1);
+		PonerTermino((co*-1),exp);
+		B.PtrPoli.Coef  = M.ObtenerDato(B.PtrPoli.Sig,1);
+			if (B.PtrPoli.Coef  !=-1) {
+				B.PtrPoli.Exp = M.ObtenerLink(B.PtrPoli.Coef);
+				B.PtrPoli.Sig = M.ObtenerLink(B.PtrPoli.Exp);
+		}
+	}
+	B.PtrPoli.Coef = copCoB;
+	B.PtrPoli.Exp =  copExB;
+	B.PtrPoli.Sig =  copSiB;
+}
+
+void Multiplicacion(PolinomioEnlazado A, PolinomioEnlazado B)
+{
+
+}
+
+int NroTerminos()
+{
+	int aux = PtrPoli.Coef,c=0;
+	if (!EsCero()) {
+		while (aux!=-1){
+			c=c+1;
+			aux = M.ObtenerDato(aux,3);
+		}
+	}else{
+		throw new Exception("ERROR POLINOMIO VACIO!");
+		}
+	return c;
+}
+
+String MostrarPoli(int a)
+{   String solucion;
+	int i=PtrPoli.Coef;
+ if (EsCero()) {
+	solucion = (IntToStr(a)+".- Y = 0");
+ }else{
+	for (i = 1; i <= Nt; i++) {
+	 if (i==1) {
+			if ((Exponente(i))>1) {
+				if ((Coeficiente(Exponente(i))!=0)) {
+					if ((Coeficiente(Exponente(i))==1)) {
+						solucion = (IntToStr(a)+".- Y = x^("+(IntToStr(Exponente(i)))+ ") ");
+					}else{
+						if ((Coeficiente(Exponente(i))==-1)){
+							solucion = (IntToStr(a)+".- Y = - x^("+IntToStr(Exponente(i))+ ") ");
+						}else{
+							if ((Coeficiente(Exponente(i))>1)) {
+							   solucion = (IntToStr(a)+".- Y = " + IntToStr(Coeficiente(Exponente(i)))+ "x^("+(IntToStr(Exponente(i)))+") ");
+							}else{
+							   solucion = (IntToStr(a)+".- Y = - " + IntToStr(Coeficiente(Exponente(i))*-1)+ "x^("+(IntToStr(Exponente(i)))+") ");
+							}
+						}
+					}
+				}
+			}else{
+				if ((Exponente(i)==1)) {
+					if ((Coeficiente(Exponente(i))!=0)) {
+						if ((Coeficiente(Exponente(i))==1)) {
+						solucion = (IntToStr(a)+".- Y = x ");
+						}else{
+							if ((Coeficiente(Exponente(i))==-1)){
+								solucion = (IntToStr(a)+".- Y = - x ");
+							}else{
+								if ((Coeficiente(Exponente(i))>1)) {
+									solucion = (IntToStr(a)+".- Y = " + IntToStr(Coeficiente(Exponente(i)))+ "x ");
+								 }else{
+									solucion = (IntToStr(a)+".- Y = - " + IntToStr(Coeficiente(Exponente(i))*-1)+"x ");
+								}
+							}
+						}
+					}
+				}else{
+					if ((Exponente(i)==0)) {
+						if ((Coeficiente(Exponente(i))!=0)) {
+							if ((Coeficiente(Exponente(i))>=1)) {
+								solucion = (IntToStr(a)+".- Y = "+ IntToStr(Coeficiente(Exponente(i))));
+							}else{
+								if ((Coeficiente(Exponente(i))<=-1)){
+									solucion = (IntToStr(a)+".- Y = - "+ IntToStr(Coeficiente(Exponente(i))*-1));
+								}
+							}
+						}
+					}else{
+                       if ((Coeficiente(Exponente(i))!=0)) {
+						 if ((Coeficiente(Exponente(i))==1)) {
+							solucion = (IntToStr(a)+".- Y = x^("+(IntToStr(Exponente(i)))+") ");
+						 }else{
+							if ((Coeficiente(Exponente(i))==-1)){
+								solucion = (IntToStr(a)+".- Y = - x^("+(IntToStr(Exponente(i)))+") ");
+							}else{
+								if ((Coeficiente(Exponente(i))>1)) {
+									solucion = (IntToStr(a)+".- Y = " + IntToStr(Coeficiente(Exponente(i)))+ "x^("+(IntToStr((Exponente(i))))+") ");
+								 }else{
+									solucion = (IntToStr(a)+".- Y = - " + IntToStr(Coeficiente(Exponente(i))*-1)+ "x^("+(IntToStr((Exponente(i))))+") ");
+								}
+							}
+						}
+					}
+				 }
+			  }
+			}
+
+	}else{
+		if ((Exponente(i))>1) {
+				if ((Coeficiente(Exponente(i))!=0)) {
+					if ((Coeficiente(Exponente(i))==1)) {
+						solucion = (solucion + " + x^("+(IntToStr(Exponente(i)))+") ");
+					}else{
+						if ((Coeficiente(Exponente(i))==-1)){
+							solucion = (solucion + " - x^("+(IntToStr(Exponente(i)))+") ");
+						}else{
+							if ((Coeficiente(Exponente(i))>1)) {
+							   solucion = (solucion +" + " + IntToStr(Coeficiente(Exponente(i)))+ "x^("+(IntToStr(Exponente(i)))+") ");
+							}else{
+							   solucion = (solucion +" - " + IntToStr(Coeficiente(Exponente(i))*-1)+ "x^("+(IntToStr(Exponente(i)))+") ");
+							}
+						}
+					}
+				}
+			}else{
+				if ((Exponente(i)==1)) {
+					if ((Coeficiente(Exponente(i))!=0)) {
+						if ((Coeficiente(Exponente(i))==1)) {
+						solucion = (solucion +" + x ");
+						}else{
+							if ((Coeficiente(Exponente(i))==-1)){
+								solucion = (solucion +" - x ");
+							}else{
+								if ((Coeficiente(Exponente(i))>1)) {
+									solucion = (solucion +" + " + IntToStr(Coeficiente(Exponente(i)))+ "x ");
+								 }else{
+									solucion = (solucion +" - " + IntToStr(Coeficiente(Exponente(i)*-1))+"x ");
+								}
+							}
+						}
+					}
+				}else{
+					if ((Exponente(i)==0)) {
+						if ((Coeficiente(Exponente(i))!=0)) {
+							if ((Coeficiente(Exponente(i))>=1)) {
+								solucion = (solucion +" + "+ IntToStr(Coeficiente(Exponente(i))));
+							}else{
+								if ((Coeficiente(Exponente(i))<=-1)){
+									solucion = (solucion +" - "+ IntToStr(Coeficiente(Exponente(i))*-1));
+								}
+							}
+						}
+					}else{
+                       if ((Coeficiente(Exponente(i))!=0)) {
+						 if ((Coeficiente(Exponente(i))==1)) {
+							solucion = (solucion +" + x^("+(IntToStr(Exponente(i)))+") ");
+						 }else{
+							if ((Coeficiente(Exponente(i))==-1)){
+								solucion = (solucion +" - x^("+(IntToStr(Exponente(i)))+") ");
+							}else{
+								if ((Coeficiente(Exponente(i))>1)) {
+									solucion = (solucion +" + " + IntToStr(Coeficiente(Exponente(i)))+ "x^("+(IntToStr((Exponente(i))))+") ");
+								 }else{
+									solucion = (solucion +" - " + IntToStr(Coeficiente(Exponente(i))*-1)+ "x^("+(IntToStr((Exponente(i))))+") ");
+								}
+							}
+						}
+					}
+				 }
+			  }
+			}
+		}
+	 }
+	}
+	return solucion;
+ }
+
+
+ void Mostrar(TCanvas *t){
+
+   M.mostrar(300,10,t);
+
+ }
+};
+//extern PolinomioEnlazado *PM;
+#endif

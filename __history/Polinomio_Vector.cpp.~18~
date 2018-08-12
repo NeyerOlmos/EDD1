@@ -1,0 +1,787 @@
+//---------------------------------------------------------------------------
+
+#pragma hdrstop
+
+#include "Polinomio_Vector.h"
+#include <string.h>
+#include <string>
+//---------------------------------------------------------------------------
+#pragma package(smart_init)
+
+ void PolinomioVector::Crear(){
+	 nt=0;
+   }
+
+
+ bool PolinomioVector::Es_Cero(){
+	return nt==0;
+  }
+
+ int PolinomioVector::Grado(){
+   if (nt>0) {
+	   int max=VE[1];
+	   int i;
+	   for (i = 0; i < nt; i++) {
+			   if (VE[i]>max) {
+				   max=VE[i];
+			   }
+	   }
+	   return max;
+	  }else{
+		 throw new Exception("Error: no hay terminos");
+		  }
+
+
+ }
+
+ int PolinomioVector::Num_De_Terminos(){
+	 return nt;
+ }
+
+ double PolinomioVector::Coeficiente(int Exponente){
+
+   if (Exponente>=0 && Exponente<=Grado()) {
+		int i;
+		 for (i = 0;i<nt; i++) {
+			  if (VE[i]==Exponente) {
+				 return VC[i];
+			  }
+		 }
+   }else{
+	throw new Exception("Error: no existe coeficiente con ese exponente");
+
+  }
+
+ }
+
+ int PolinomioVector::Get_Exponente(int NumDeTermino){
+
+	int x = VE[NumDeTermino-1];
+	return x;
+
+   }
+
+ int PolinomioVector::ExisteExp(int exp){
+
+
+   int i;
+  for (i =0 ; i < nt; i++) {
+		if (VE[i]==exp) {
+			return i;
+		}
+   }
+   return -1;
+  }
+
+ void PolinomioVector::Desplazar_Un_Elem_Hacia_La_Pos_Lug(int lug){
+  int i;
+   for (i = lug; i < nt; i++) {
+		 VE[i]=VE[i+1];
+		 VC[i]=VC[i+1];
+
+   }
+
+ }
+
+ void PolinomioVector::Poner_Termino(double Coeficiente,int Exponente){
+	/* int lug=nt;
+	   if (Coeficiente!=0) {
+
+	 if (nt==0) {
+		 nt=nt+1;
+		 VC[lug]=Coeficiente;
+		 VE[lug]=Exponente;
+	 } else{
+	 int i=0;
+		bool Swich=false;
+			while (i<nt){
+			  if (VE[i]==Exponente) {
+				  VC[i]=VC[i]+Coeficiente;
+				   Swich=true;
+			  }
+			  i++;
+			}
+			if (!Swich) {
+			  nt=nt+1;
+			  VE[lug]=Exponente;
+			  VC[lug]=Coeficiente;
+
+			}
+	 }
+  }   */
+	   if (Exponente>=0) {
+
+
+
+	 int lug=ExisteExp(Exponente);
+	 if (lug!=-1) {
+		 VC[lug]=VC[lug]+Coeficiente;
+			 if (VC[lug]==0) {
+				//Desplazar 1 elemento hacia la posicion lug
+				Desplazar_Un_Elem_Hacia_La_Pos_Lug(lug);
+				nt=nt-1;
+			 }
+	 }
+			 else{
+				VC[nt]=Coeficiente;
+				VE[nt]=Exponente;
+				nt=nt+1;
+			  }
+
+   }else{
+
+   throw new Exception("Error: un polinomio no puede tener exponente negativo");
+   }
+ }
+
+ void PolinomioVector::Sumar(PolinomioVector A){
+  int i;
+  for (i = 0; i < A.nt; i++) {
+   int exp=A.Get_Exponente(i);
+   int coef=A.Coeficiente(exp);
+
+	Poner_Termino(coef*exp,exp-1);
+
+  }
+ }
+
+ void PolinomioVector::Sumar(PolinomioVector A,PolinomioVector B){
+ int i;
+   for (i = 0; i < A.nt; i++) {
+	 int exp=A.Get_Exponente(i);
+   int coef=A.Coeficiente(exp);
+	Poner_Termino(coef,exp);
+
+   }
+
+
+   for (i = 0; i < B.nt; i++) {
+	 int exp=B.Get_Exponente(i);
+   int coef=B.Coeficiente(exp);
+	Poner_Termino(coef,exp);
+
+   }
+
+ }
+
+ void PolinomioVector::Multiplicar_por_menos1(){
+   int i;
+   for (i = 0; i < nt; i++) {
+	  VC[i]=VC[i]*(-1);
+   }
+
+ }
+
+ void PolinomioVector::Restar(PolinomioVector A,PolinomioVector B){
+	  B.Multiplicar_por_menos1() ;
+	  Sumar(A,B);
+
+ }
+
+ void PolinomioVector::Multiplicar(PolinomioVector A,PolinomioVector B){
+  //hacer :V
+  int i;
+  for (i = 0 ; i < A.Num_De_Terminos(); i++) {
+	  int j;
+	  for (j = 0; j < B.Num_De_Terminos(); j++) {
+			  int coef=A.VC[i]*B.VC[j];
+			  int exp=A.VE[i]+B.VE[j];
+			  Poner_Termino(coef,exp);
+	  }
+  }
+
+ }
+
+ void PolinomioVector::Derivar(){
+	 int i;
+	 for (i = 0; i < nt; i++) {
+		int exp = Get_Exponente(i+1);
+		double coef = Coeficiente(exp);
+		   if (exp!=0) {
+		   VC[i] =	coef*exp ;
+		   VE[i] = exp-1;
+		   }else{
+		   VC[i] =	coef*exp ;
+			}
+	 }
+}
+
+ void PolinomioVector::Integrar(){
+	 int i;
+	 for (i = 0; i < nt; i++) {
+		  int exp =Get_Exponente(i+1);
+		  double coef = Coeficiente(exp);
+
+		 VC[i]=coef*pow(exp+1.0,-1);
+		 VE[i]=exp+1 ;
+  }
+
+ }
+
+
+ double PolinomioVector::Potencia(double Numero,double Potencia){
+   int i;
+   double result=Numero;
+	 if (Potencia>0) {
+
+
+	  for (i = 1 ; i < Potencia; i++) {
+		  result=result*Numero;
+	   }
+	 }else{
+	 result=1;
+	 }
+
+
+	 return result;
+ }
+
+ double PolinomioVector::Calcular_Y(double X){
+		int i;
+		double y=0;
+		double x;
+	 for (i =0 ; i < nt; i++) {
+		x=Potencia(X,VE[i]);
+		y=y+VC[i]*x;
+	 }
+
+
+
+  return y;
+ }
+
+
+
+
+
+
+
+
+
+
+ double PolinomioVector::AreaBajoLaCurva(int A, int B){
+
+
+	 Integrar();
+	 double YA=Calcular_Y(A);
+	 double YB=Calcular_Y(B);
+	 Derivar();
+	 return YB-YA;
+ }
+
+
+
+
+
+
+
+
+
+ void PolinomioVector::MostrarPolinomioEnStringGrid(TStringGrid *te,TStringGrid *tc){
+   int i;
+   te->ColCount=nt;
+   tc->ColCount=nt;
+   te->Width=nt*40;
+   tc->Width=nt*40;
+	 for (i = 0; i < nt; i++) {
+
+		te->Cells[i][0]=VE[i];
+		//tc->Cells[i][0]=VC[i];
+
+		tc->Cells[i][0]=FloatToStr(VC[i])+"x";
+
+	 }
+
+
+ }
+
+ void PolinomioVector::MostrarIteraciones(TStringGrid *t){
+	t->ColCount=2;
+	t->Width=95;
+	//int q=Grado();
+	t->RowCount=7;
+	t->Height=7*24+4;
+	 int a=0;
+	 int i;
+	for (i = -3; i <= 3; i++) {
+	   t->Cells [0][a]= i ;
+	   t->Cells[1][a]= Calcular_Y(i);
+		a=a+1 ;
+	}
+
+
+ }
+
+ void PolinomioVector::GraficarEnCanvas(TCanvas *t){
+ // dibujo de los margenes-------------------------------------------------------
+
+   t->Pen->Color=clBlack;
+   t->Pen->Width=2;
+   t->Rectangle(1,1,600,400);
+
+
+
+  //dibujo de las Lineas de los ejes X y Y ---------------------
+
+
+   t->Pen->Color=clRed;
+   t->Pen->Width=1;
+   t->MoveTo(300,0);
+   t->LineTo(300,400);
+   t->MoveTo(0,200);
+   t->LineTo(600,200);
+
+   //dibujo de los triangulos de las puntas de los ejes X y Y ----------------
+   TPoint vertices[3];
+	vertices[0] = Point(0,200);
+	vertices[1] = Point(5,195);
+	vertices[2] = Point(5,205);
+	t->Polygon(vertices, 2);
+
+	vertices[0] = Point(600,200);
+	vertices[1] = Point(595,195);
+	vertices[2] = Point(595,205);
+	t->Polygon(vertices, 2);
+
+	vertices[0] = Point(300,0);
+	vertices[1] = Point(295,5);
+	vertices[2] = Point(305,5);
+	t->Polygon(vertices, 2);
+
+	vertices[0] = Point(300,400);
+	vertices[1] = Point(295,395);
+	vertices[2] = Point(305,395);
+	t->Polygon(vertices, 2);
+	t->MoveTo(300,200);
+
+	//dibujado de lineas en los ejes X y Y ------------------------------------
+
+	//lineas del eje X
+	t->Brush->Color=clWhite;
+	double x=20;
+	double y=195;
+	int i;
+	for (i = 0; i < 30; i++) {
+	t->MoveTo(x,y);
+	t->LineTo(x,y+10);
+	x=x+20;
+
+	}
+
+	//lineas del eje Y
+
+	x=295;
+	y=20;
+	for (i = 0; i < 20; i++) {
+	t->MoveTo(x,y);
+	t->LineTo(x+10,y);
+	y=y+20;
+	}
+
+   //colocado de los numeros en los ejes X y Y ----------------------------
+	t->TextOutW(298,201,"0");
+
+	//eje X
+	x=317;
+	y=202;
+	for (i =1 ; i < 15; i++) {
+		  t->TextOutW(x,y,IntToStr(i));
+		  x=x+20;
+	}
+
+	x=272;
+	for (i = 1; i < 15; i++) {
+		 t->TextOutW(x,y,IntToStr(-i));
+		  x=x-20;
+	}
+	//eje Y
+
+
+	x=290;
+	y=174;
+
+	for (i = 1; i < 10; i++) {
+		 t->TextOutW(x,y,IntToStr(i));
+		 y=y-20;
+	}
+
+	y=214;
+	x=285;
+	for (i = 1; i < 10; i++) {
+		 t->TextOutW(x,y,IntToStr(-i));
+		 y=y+20;
+	}
+
+
+
+
+
+   //1er intento de graficar un polinomio :v ----------------------------------------------------------------------
+	t->Pen->Width=4;
+	 t->Pen->Color=clBlack;
+	 x=0;
+	 y=0;
+	 int Y = Calcular_Y(-15);
+	if (Y>0) {
+	  t->MoveTo(x,200-Y*20);
+	} else{
+	 t->MoveTo(x,200+Y*(-20));
+		   }
+
+
+
+	  for (i = -14; i <= 15; i++) {
+		  x=x+20;
+		  Y = Calcular_Y(i);
+		  if (Y>0) {
+		  t->LineTo(x,200-Y*20);
+		  t->MoveTo(x,200-Y*20);
+
+		  }else{
+		  t->LineTo(x,200+Y*(-20));
+		  t->MoveTo(x,200+Y*(-20));
+
+				}
+
+
+	  }
+  }
+
+   void PolinomioVector::GraficarArea(TCanvas *r,int a,int b){
+
+	double x,y;
+	double Y;
+
+
+
+	double i=a;
+	r->Pen->Width=1;
+	r->Pen->Color=clBlue;
+	while (i<=b){
+	 x=300+i*(20);
+	 Y = Calcular_Y(i);
+	 y=200-Y*(20);
+
+	 r->MoveTo(x,y);
+	 r->LineTo(x,y+Y*20);
+
+
+	  i=i+0.2;
+	}
+			 r->Pen->Width=3;
+	 r->Pen->Color=clRed;
+
+	x=300+a*(20);
+	Y = Calcular_Y(a);
+	y=200-Y*(20);
+
+	r->MoveTo(x,y);
+	r->LineTo(x,y+Y*20);
+
+
+	x=300+b*(20);
+	Y = Calcular_Y(b);
+	y=200-Y*(20);
+
+	r->MoveTo(x,y);
+	r->LineTo(x,y+Y*20);
+
+
+
+  /*	if (Y>0) {
+	  r->MoveTo(x,200-Y*20;
+	} else{
+	 y=200+Y*(-20);
+	 }
+	  r->MoveTo(x,y);
+	  r->LineTo(x,200);
+
+
+
+	  Y = Calcular_Y(b);
+
+	if (Y>0) {
+	  y=x,200-Y*20;
+	} else{
+	 y=200+Y*(-20);
+	 }
+	  r->MoveTo(x,y);
+	  r->LineTo(x,200);    */
+
+	/* int i;
+
+	  for (i = a+1; i <= b; i++) {
+		  x=x+20;
+		  Y = Calcular_Y(i);
+		  if (Y>0) {
+		  r->LineTo(x,200-0*20);
+		  r->MoveTo(x,200-Y*20);
+
+		  }else{
+		  r->LineTo(x,200+0*(-20));
+		  r->MoveTo(x,200+Y*(-20));
+
+				}
+	  }
+		 */
+  }
+
+
+	void PolinomioVector::MostrarPolinomioEnLabel(TLabel *l){
+	 l->Font->Size=18;
+	 l->Caption="f(x)= ";
+
+
+	 int i;
+	 for (i = 0; i < nt; i++) {
+		l->Caption=l->Caption+FloatToStr(SimpleRoundTo(VC[i],-3))+"x^"+IntToStr(VE[i])+" ";
+	   //	te->Cells[i][0]=;
+
+
+	 //	tc->Cells[i][0]=IntToStr();
+
+	 }
+
+	}
+
+
+
+
+
+
+
+
+
+
+
+//-------------------------------------------------------------------------/
+
+ void PolinomioVector::GraficarCanvas(TImage *t){
+
+ double T(50);    // 10 se ve bien
+	 double v(20);         // 9 10 12 15 18 20 30 36  45 60 90 180
+	 double w=v;
+
+	// v=v/T;
+ // dibujo de los margenes-------------------------------------------------------
+   t->Canvas->Pen->Color=clBlack;
+   t->Canvas->Pen->Width=2;
+   int xx(t->Width);
+   int yy(t->Height);
+   t->Canvas->Rectangle(1,1,xx,yy);
+	double TT((xx/2+5)/w);
+
+
+  //dibujo de las Lineas de los ejes X y Y ---------------------
+
+
+   t->Canvas->Pen->Color=clRed;
+   t->Canvas->Pen->Width=1;
+   t->Canvas->MoveTo(xx/2+5,0);
+   t->Canvas->LineTo(xx/2+5,yy);
+   t->Canvas->MoveTo(0,yy/2+5);
+   t->Canvas->LineTo(xx,yy/2+5);
+
+   //dibujo de los triangulos de las puntas de los ejes X y Y ----------------
+   TPoint vertices[3];
+	vertices[0] = Point(0,yy/2+5);
+	vertices[1] = Point(5,(yy/2));
+	vertices[2] = Point(5,(yy/2)+10);
+	t->Canvas->Polygon(vertices, 2);
+
+	vertices[0] = Point(xx,yy/2+5);
+	vertices[1] = Point(xx-5,(yy/2));
+	vertices[2] = Point(xx-5,(yy/2)+10);
+	t->Canvas->Polygon(vertices, 2);
+
+	vertices[0] = Point(xx/2+5,0);
+	vertices[1] = Point((xx/2),5);
+	vertices[2] = Point((xx/2)+10,5);
+	t->Canvas->Polygon(vertices, 2);
+
+	vertices[0] = Point(xx/2+5,yy);
+	vertices[1] = Point((xx/2),yy-5);
+	vertices[2] = Point((xx/2)+10,yy-5);
+	t->Canvas->Polygon(vertices, 2);
+	t->Canvas->MoveTo(xx/2+5,yy/2+5);
+
+	//dibujado de lineas en los ejes X y Y ------------------------------------
+
+	//lineas del eje X
+	double x=w;
+	double y=(yy/2);    //200
+	int i;
+	for (i = 1; i <= ((TT*2)+1); i++) {
+	t->Canvas->MoveTo(x,y);
+	t->Canvas->LineTo(x,y+10);
+	x=x+w;
+
+	}
+
+	//lineas del eje Y
+
+	x=(xx/2);    //300
+	y=w;
+	for (i = 1; i < ((TT*2)+1); i++) {
+	t->Canvas->MoveTo(x,y);
+	t->Canvas->LineTo(x+10,y);
+	y=y+w;
+	}
+
+   //colocado de los numeros en los ejes X y Y ----------------------------
+	t->Canvas->TextOut((xx/2)-2,(yy/2)+1,"0");
+					// 298,201,"0" pone algostring en canvas
+	//eje X
+	x=(xx/2)+w+3;//323
+	y=(yy/2)+10;//210
+	for (i =1 ; i < (TT+1); i++) {
+		  t->Canvas->TextOutW(x,y,IntToStr(i));
+		  x=x+w;
+	}
+
+	x=(xx/2)-(w+3); //272
+	for (i = 1; i < (TT+1); i++) {
+		 t->Canvas->TextOutW(x,y,IntToStr(-i));
+		  x=x-w;
+	}
+	//eje Y
+
+
+	x=(xx/2)-10; //290
+	y=(yy/2)-(w+6); //174
+
+	for (i = 1; i < (TT+1); i++) {
+		 t->Canvas->TextOutW(x,y,IntToStr(i));
+		 y=y-w;
+	}
+
+	y=(yy/2)+(w-6);//214
+	x=(xx/2)-15; //285
+	for (i = 1; i < (TT+1); i++) {
+		 t->Canvas->TextOutW(x,y,IntToStr(-i));
+		 y=y+w;
+	}
+
+
+   //1er intento de graficar un polinomio :v ----------------------------------------------------------------------
+	 t->Canvas->Pen->Color=clBlue;
+	 x=0;
+	 y=0;
+
+	// double TT(180/w);
+	 double Y = Calcular_Y(-TT);
+	if (Y>0) {
+	  t->Canvas->MoveTo(x,((yy/2)-Y*(w)+5));
+	} else{
+	 t->Canvas->MoveTo(x,((yy/2)+Y*(-w)+5));
+		   }
+	 //	   double T(5);    // 10 se ve bien
+	 //	  double v(20);
+	   v=v/T;
+	  for (double i = (-(TT)+(1/T)); i < TT; i=(i+(1/T))) { // T para regular tamanho
+		  x=x+v;
+		  Y = Calcular_Y(i);
+		  if (Y>0) {
+			double az=((yy/2)-Y*(w)+5);
+			t->Canvas->LineTo(x,az);
+		  t->Canvas->MoveTo(x,(((yy/2)-Y*(w))+5));
+		  }else{
+		  t->Canvas->LineTo(x,((((yy/2)+Y*(-w)))+5));
+		  t->Canvas->MoveTo(x,((((yy/2)+Y*(-w)))+5));
+				}
+
+	  }
+
+
+
+  }
+
+
+
+  double PolinomioVector::pintar(TImage *t,int a,int b){
+double Area=0;
+t->Canvas->Pen->Color=clBlue;
+ double T(50);    // 10 se ve bien
+	 double v(20);         // 9 10 12 15 18 20 30 36  45 60 90 180
+	 double w=v;
+
+double xx=t->Width;
+double yy=t->Height;
+double x=(xx/2)+(a*v)+5;
+
+double Y;
+  /*	if (Y>0) {
+
+	  t->Canvas->MoveTo(x,((yy/2)-(Y*w))+5);
+	  t->Canvas->LineTo(x,(xx/2)+5);
+	} else{
+	 t->Canvas->MoveTo(x,((yy/2)+Y*(-w))+5);
+	  t->Canvas->LineTo(x,(xx/2)+5);
+		   }     */
+ v=v/T;
+double i;
+
+	for (i = (a); i <= b; i=i+(1/T)) {
+
+			Y = Calcular_Y(i);
+		  if (Y>0) {
+			  Area=Area+((1/T)*Y);
+			  t->Canvas->MoveTo(x,((yy/2)-Y*(w))+5);
+			  t->Canvas->LineTo(x,(xx/2)+5);
+		  } else{
+			  Area=Area-((1/T)*Y);
+			 t->Canvas->MoveTo(x,((yy/2)+Y*(-w))+5);
+			 t->Canvas->LineTo(x,(xx/2)+5);
+		  }
+
+	   x=x+v ;
+	}
+	return (Area);
+
+}
+
+
+void PolinomioVector::Mostrar(int x,int y,TCanvas *t){
+
+  t->Pen->Color=clWhite;
+  t->Rectangle(0,0,1000,1000);
+	  y=y+30;
+	 int i;
+	 int X=x;
+
+	 for (i = 0; i < nt; i++) {
+
+		String n=FloatToStr(SimpleRoundTo(VC[i],-3));
+		   int u= n.Length() ;
+	  //	t->Font->Color=clGreen;
+		t->Font->Size=25;
+		t->TextOutW(X,y,FloatToStr(SimpleRoundTo(VC[i],-3)));
+
+		// t->Font->Color=clBlue;
+		t->TextOutW(X+u*20,y,"x");
+
+	   //	t->Font->Color=clRed;
+		t->Font->Size=12;
+		t->TextOutW(X+10+(u*20),y-4,IntToStr(VE[i]));
+		X= X + 40 + u*25 ;
+	 }
+
+
+}
+
+
+void PolinomioVector::Lin_Bairstow(int R0,int S0,double Error){
+ int n=Grado();
+
+ while (n>=3){
+
+
+
+ }
+
+
+
+
+
+}
+

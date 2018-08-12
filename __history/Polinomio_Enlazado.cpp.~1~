@@ -1,0 +1,52 @@
+//---------------------------------------------------------------------------
+
+#pragma hdrstop
+
+#include "Polinomio_Enlazado.h"
+//---------------------------------------------------------------------------
+#pragma package(smart_init)
+
+
+
+void PolinomioEnlazado::Crear(){
+  PtrPoli.dato=-1;
+  nt=0;
+
+
+}
+
+bool PolinomioEnlazado::EsCero(){
+  return nt==0;
+}
+void PolinomioEnlazado::Poner(int Coeficiente,int Exponenete){
+
+
+
+
+
+}
+
+int PolinomioEnlazado::ExisteExp(int exp){
+  int r,a;
+
+  while (PtrPoli.exp!=-1){
+	r=M.ObtenerDato(PtrPoli.exp,1);
+	  if (r==Exp) {
+			a=PtrPoli.coef;
+			PtrPoli.coef=
+
+
+	  }
+
+
+  }
+		   /*a = PtrPoli.Coef;
+				PtrPoli.Coef = copiaC;
+				PtrPoli.Exp = copiaEx;
+				PtrPoli.Sig = copiaSig;
+				return a;*/
+
+
+
+
+}

@@ -1,0 +1,125 @@
+//---------------------------------------------------------------------------
+
+#pragma hdrstop
+
+#include "Conjunto_ListaVector.h"
+//---------------------------------------------------------------------------
+#pragma package(smart_init)
+
+
+void Conjunto::Crear(){
+	  elem.crear();
+}
+
+bool Conjunto::Vacia(){
+   return elem.vacia();
+
+}
+int Conjunto::Cardinal(){
+	return elem.longitud();
+}
+void Conjunto::inserta(int elemento){
+//if (elem.vacia()) {
+if (!pertenece(elemento)) {
+
+
+	elem.inserta(1,elemento);
+	}else{
+	throw new Exception("Error: elemento ya esta en la lista");
+	}
+	//}else{
+// elem.inserta(elem.primero(),elemento);
+ //  }
+}
+
+
+
+
+void Conjunto::suprime(int elemento){
+	if (pertenece(elemento)) {
+		elem.suprime(elem.recupera_dir(elemento));
+	}
+
+}
+
+  bool Conjunto::pertenece(int elemento){
+	int i=0;
+	bool r=false;
+	while (i<elem.longitud()&& r==false){
+
+	  int q=elem.recupera(i+1);
+
+	   if (q==elemento) {
+		 r=true;
+	   }
+	   i++;
+	}
+
+
+	 return r;
+
+  }
+
+
+  int Conjunto::muestrea() {
+	   int x=elem.recupera(Random(elem.longitud())+1);
+	  return x;
+  }
+
+
+  void Conjunto::Union(Conjunto A,Conjunto B){
+	  while (A.Cardinal()!=0) {
+			int elemento=A.muestrea();
+			 if (!pertenece(elemento)) {
+
+
+			 inserta(elemento);
+			 }A.suprime(elemento);
+	  }
+
+	   while (B.Cardinal()!=0){
+			int elemento=B.muestrea();
+			if (!pertenece(elemento)) {
+
+
+			inserta(elemento);
+			}B.suprime(elemento);
+	   }
+
+
+
+  }
+
+
+  void Conjunto::Interserccion(Conjunto A,Conjunto B){
+	 while (A.Cardinal()!=0){
+		 int x=A.muestrea();
+		   if (B.pertenece(x)) {
+			  inserta(x);
+		   }
+		   A.suprime(x);
+
+		 }
+
+  }
+
+  void Conjunto::No_Interseccion(Conjunto A,Conjunto B){
+	int q=A.Cardinal();
+	int i=0;
+	while (i<=q){
+	  int x=A.muestrea();
+
+	  if (B.pertenece(x)) {
+		 A.suprime(x);
+		 B.suprime(x);
+	  }
+	  i=i+1;
+	}
+	 Union(A,B);
+  }
+
+
+void Conjunto::mostrar(TStringGrid *t){
+	elem.mostrarListaEnStringGrid(t);
+
+}

@@ -1,0 +1,164 @@
+//---------------------------------------------------------------------------
+
+#pragma top
+
+#include "Conjunto_Lista.h"
+//---------------------------------------------------------------------------
+#pragma package(smart_init)
+
+
+void ConjuntoLista::Crear(){
+	  elem.Crear();
+}
+
+bool ConjuntoLista::Vacia(){
+   return elem.Vacia();
+
+}
+int ConjuntoLista::Cardinal(){
+	return elem.Longitud();
+}
+void ConjuntoLista::inserta(int elemento){
+//if (elem.vacia()) {
+if (!pertenece(elemento)) {
+
+
+	elem.Inserta(1,elemento);
+	}else{
+	throw new Exception("Error: elemento ya esta en la lista");
+	}
+	//}else{
+// elem.inserta(elem.primero(),elemento);
+ //  }
+}
+
+
+
+
+void ConjuntoLista::suprime(int elemento){
+	if (pertenece(elemento)) {
+		elem.Suprime(elem.Recupera_dir(elemento));
+	}
+
+}
+
+  bool ConjuntoLista::pertenece(int elemento){
+	int i=0;
+	bool r=false;
+	while (i<elem.Longitud()&& r==false){
+
+	  int q=elem.Recupera(i+1);
+
+	   if (q==elemento) {
+		 r=true;
+	   }
+	   i++;
+	}
+
+
+	 return r;
+
+  }
+
+
+  int ConjuntoLista::muestrea() {
+	   int x=elem.Recupera(Random(elem.Longitud())+1);
+	  return x;
+  }
+
+
+  void ConjuntoLista::Union(ConjuntoLista A,ConjuntoLista B){
+	  while (A.Cardinal()!=0) {
+			int elemento=A.muestrea();
+			 if (!pertenece(elemento)) {
+
+
+			 inserta(elemento);
+			 }A.suprime(elemento);
+	  }
+
+	   while (B.Cardinal()!=0){
+			int elemento=B.muestrea();
+			if (!pertenece(elemento)) {
+
+
+			inserta(elemento);
+			}B.suprime(elemento);
+	   }
+
+
+
+  }
+
+
+  void ConjuntoLista::Interserccion(ConjuntoLista A,ConjuntoLista B){
+	 while (A.Cardinal()!=0){
+		 int x=A.muestrea();
+		   if (B.pertenece(x)) {
+			  inserta(x);
+		   }
+		   A.suprime(x);
+
+		 }
+
+  }
+
+  void ConjuntoLista::No_Interseccion(ConjuntoLista A,ConjuntoLista B){
+	int q=A.Cardinal();
+	int i=0;
+	while (i<=q){
+	  int x=A.muestrea();
+
+	  if (B.pertenece(x)) {
+		 A.suprime(x);
+		 B.suprime(x);
+	  }
+	  i=i+1;
+	}
+	 Union(A,B);
+  }
+
+
+void ConjuntoLista::mostrar(TStringGrid *t){
+   	elem.MostrarListaEnStringGrid(t);
+
+}
+
+
+void ConjuntoLista::MostrarConjunto(int x,int y,TCanvas *t){
+  int i=0;
+  int tam;
+  while (i<=10){
+	  
+	if (elem.Longitud()<= pow(2.0,i)) {
+	   tam=pow(2.0,i);
+	   i=11;
+	}else{
+	  i=i+1;
+	 }
+  
+
+  }
+  t->Pen->Color=clWhite;
+  t->Brush->Color=clWhite;
+  
+  t->Rectangle(0,0,1000,1000);
+
+   t->Pen->Color=clBlack;
+   t->Brush->Color=clRed;
+  int xc=(tam/2)*20;
+  int yc=(tam/2)*20;
+
+  t->Ellipse(x,y,tam*20,tam*20);
+ t->Brush->Color=clWhite; 
+ // t->Font->Size=20;
+ for (i = 1; i <= elem.Longitud(); i++) {
+  t->TextOutW(xc+(i*10),yc+(i*10),IntToStr(elem.Recupera(i)));
+
+ }
+
+
+	 
+
+
+}

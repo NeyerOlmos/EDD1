@@ -1,0 +1,48 @@
+//---------------------------------------------------------------------------
+
+#ifndef ListaEnlazadaH
+#define ListaEnlazadaH
+#include "vcl.h"
+#include "SMemoria.h"
+//---------------------------------------------------------------------------
+struct Nodo1{
+ int dato;
+ Nodo1 *sig;
+};
+
+typedef Nodo1 Direccion;
+
+  class ListaEnlazada{
+	private:// atributos de la clase ListaEnlazada
+	SMemoria M;
+	 Direccion PtrElementos;
+	 int longitud;
+
+	public://funciones y procedimientos
+	 void Crear();
+	 int Fin();
+	 int Primero();
+	 int Siguiente(int direccion);
+	 int Anterior(int direccion);
+	 void Inserta(int direccion, int elemento);
+	 void Modifica(int direccion, int elemento);
+	 void Suprime(int direccion);
+	   int Recupera(int dir) ;
+	 int Longitud();
+	 bool Vacia();
+	 void Mostrar(int x, int y,TCanvas *t);
+	 int MostrarPtrEle();
+	 int MostrarDir(int Nro);
+	  int Localiza(int ele);
+	  void EliminaDato(int Ele)  ;
+	 int MostrarDato(int Nro);
+	 int MostrarSig(int Nro);
+	 void Anula();
+	 bool RecuperaC(int Ele);
+
+  };
+
+ // extern ListaEnlazada *ListaE;
+
+
+#endif

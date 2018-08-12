@@ -1,0 +1,125 @@
+//---------------------------------------------------------------------------
+
+#pragma hdrstop
+
+#include "Conjunto_Lista.h"
+//---------------------------------------------------------------------------
+#pragma package(smart_init)
+
+
+void ConjuntoLista::Crear(){
+	  elem.crear();
+}
+
+bool ConjuntoLista::Vacia(){
+   return elem.vacia();
+
+}
+int ConjuntoLista::Cardinal(){
+	return elem.longitud();
+}
+void ConjuntoLista::inserta(int elemento){
+//if (elem.vacia()) {
+if (!pertenece(elemento)) {
+
+
+	elem.inserta(1,elemento);
+	}else{
+	throw new Exception("Error: elemento ya esta en la lista");
+	}
+	//}else{
+// elem.inserta(elem.primero(),elemento);
+ //  }
+}
+
+
+
+
+void ConjuntoLista::suprime(int elemento){
+	if (pertenece(elemento)) {
+		elem.suprime(elem.recupera_dir(elemento));
+	}
+
+}
+
+  bool ConjuntoLista::pertenece(int elemento){
+	int i=0;
+	bool r=false;
+	while (i<elem.longitud()&& r==false){
+
+	  int q=elem.recupera(i+1);
+
+	   if (q==elemento) {
+		 r=true;
+	   }
+	   i++;
+	}
+
+
+	 return r;
+
+  }
+
+
+  int ConjuntoLista::muestrea() {
+	   int x=elem.recupera(Random(elem.longitud())+1);
+	  return x;
+  }
+
+
+  void ConjuntoLista::Union(ConjuntoLista A,ConjuntoLista B){
+	  while (A.Cardinal()!=0) {
+			int elemento=A.muestrea();
+			 if (!pertenece(elemento)) {
+
+
+			 inserta(elemento);
+			 }A.suprime(elemento);
+	  }
+
+	   while (B.Cardinal()!=0){
+			int elemento=B.muestrea();
+			if (!pertenece(elemento)) {
+
+
+			inserta(elemento);
+			}B.suprime(elemento);
+	   }
+
+
+
+  }
+
+
+  void ConjuntoLista::Interserccion(ConjuntoLista A,ConjuntoLista B){
+	 while (A.Cardinal()!=0){
+		 int x=A.muestrea();
+		   if (B.pertenece(x)) {
+			  inserta(x);
+		   }
+		   A.suprime(x);
+
+		 }
+
+  }
+
+  void ConjuntoLista::No_Interseccion(ConjuntoLista A,ConjuntoLista B){
+	int q=A.Cardinal();
+	int i=0;
+	while (i<=q){
+	  int x=A.muestrea();
+
+	  if (B.pertenece(x)) {
+		 A.suprime(x);
+		 B.suprime(x);
+	  }
+	  i=i+1;
+	}
+	 Union(A,B);
+  }
+
+
+void ConjuntoLista::mostrar(TStringGrid *t){
+	elem.mostrarListaEnStringGrid(t);
+
+}

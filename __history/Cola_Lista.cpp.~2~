@@ -1,0 +1,66 @@
+//---------------------------------------------------------------------------
+
+#pragma hdrstop
+
+#include "Cola_Lista.h"
+//---------------------------------------------------------------------------
+#pragma package(smart_init)
+
+
+void ColaLista::Crear(){
+
+
+
+}
+
+bool ColaLista::Vacia(){
+
+  return L.Vacia();
+}
+
+void ColaLista::Poner(int Elemento){
+   if (!L.Vacia()) {
+
+
+   L.Inserta(L.Fin(),Elemento);
+
+   L.Modifica(L.Anterior(L.Fin()),L.Recupera(L.Fin()));
+   L.Modifica(L.Fin(),Elemento);
+   }else{
+
+   L.Inserta(1,Elemento);
+
+   }
+
+
+}
+
+int ColaLista::Sacar(){
+int x;
+ if (!L.Vacia()) {
+
+ x=L.Recupera(L.Primero());
+ L.Suprime(L.Primero());
+ }else{
+
+ throw new Exception("Error: Cola VAcia");
+ }
+ return x;
+}
+
+
+
+int ColaLista::Primero(){
+  if (L.Vacia()) {
+			   throw new Exception("Error: Cola Vacia");
+  }
+
+
+  return L.Primero();
+}
+
+
+void ColaLista::Mostrar(TStringGrid *t){
+ L.MostrarListaEnStringGrid(t);
+
+}
